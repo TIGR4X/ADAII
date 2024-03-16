@@ -1,12 +1,20 @@
 from itertools import permutations
 
-#Datos de la finca y tablones
-finca = [(10, 3, 4), (5, 3, 3), (2, 2, 1), (8, 1, 1),(6, 4, 2)]
+#lectura de datos
+def leer_datos_finca(archivo):
+    with open(archivo, 'r') as f:
+        lineas = f.readlines()
+    finca = [tuple(map(int, linea.strip().split(','))) for linea in lineas[1:]]  
+    return finca
+
+#vincular datos de archivo a una finca
+finca = leer_datos_finca('datos.txt')
 
 # Obtener todas las programaciones
 indicesParcelas = list(range(len(finca)))
 generarProgramaciones = list(permutations(indicesParcelas))
 
+#obtener todas las combinaciones de riego 
 numeroPermutaciones = len(generarProgramaciones)
 
 
@@ -38,8 +46,6 @@ def costoTotalRiego(costosDeRiego):
     cost = sum(costosDeRiego)
     return cost
 
-
-
 todosLosCostos = []
 for programacion in generarProgramaciones:
     iniciosDeRiego = calcularIniciosDeRiego(finca, programacion)
@@ -51,6 +57,22 @@ for programacion in generarProgramaciones:
 costoMinimo = min(todosLosCostos)
 costoMinimoIndice = todosLosCostos.index(costoMinimo)
 programacionOptima = generarProgramaciones[costoMinimoIndice]
+
+
+def escribir_resultados(costo_minimo, programacion_optima, nombre_archivo):
+    with open(nombre_archivo, 'w') as archivo:
+        #costo minimo
+        archivo.write(f"costo {costo_minimo}\n")
+        
+        #orden de tablones
+        for tablon in programacion_optima:
+            archivo.write(f"tablon {tablon}\n")  
+
+
+############## salidas ############################################################
+nombre_archivo = "riego-optimo.txt"
+escribir_resultados(costoMinimo, programacionOptima, nombre_archivo)
+
 
 print("programacion optima:", programacionOptima)
 print("Costo total minimo:", costoMinimo)
