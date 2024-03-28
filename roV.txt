@@ -1,0 +1,6 @@
+costo 32
+tablon 0
+tablon 1
+tablon 3
+tablon 2
+tablon 4

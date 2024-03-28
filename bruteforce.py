@@ -4,7 +4,7 @@ from customtkinter import *
 class Finca:
     def __init__(self, archivo_datos):
         self.finca = self.leer_datos_finca(archivo_datos)
-        self.programaciones = list(permutations(range(len(self.finca))))
+        self.permutacionProgramaciones = list(permutations(range(len(self.finca))))
         
     def leer_datos_finca(self, archivo):
         with open(archivo, 'r') as f:
@@ -38,7 +38,7 @@ class Finca:
 
     def fuerza_bruta(self):
         todosLosCostos = []
-        for programacion in self.programaciones:
+        for programacion in self.permutacionProgramaciones:
             iniciosDeRiego = self.calcular_inicios_de_riego(programacion)
             costosDeRiego = self.calcular_costo_riego_tablon(iniciosDeRiego)
             total_irrigation_cost = self.costo_total_riego(costosDeRiego)
@@ -46,9 +46,18 @@ class Finca:
             
         costoMinimo = min(todosLosCostos)
         costoMinimoIndice = todosLosCostos.index(costoMinimo)
-        programacionOptima = self.programaciones[costoMinimoIndice]
+        programacionOptima = self.permutacionProgramaciones[costoMinimoIndice]
         
         return costoMinimo, programacionOptima
+    
+
+    def riego_voraz(self):
+        # Ordenar tablones por la division tr/p mas baja
+        iniciosRiegoV = sorted(range(len(self.finca)), key=lambda i: self.finca[i][1] / self.finca[i][2])
+        iniciosDeRiego = self.calcular_inicios_de_riego(iniciosRiegoV)
+        costosDeRiego = self.calcular_costo_riego_tablon(iniciosDeRiego)
+        totalCost = self.costo_total_riego(costosDeRiego)
+        return totalCost, iniciosRiegoV
 
     def escribir_resultados(self, costo_minimo, programacion_optima, nombre_archivo):
         with open(nombre_archivo, 'w') as archivo:
@@ -90,21 +99,34 @@ salidaTitle = CTkTextbox(master=app, width=318, height=23, fg_color="#F79753",co
 salidaTitle.place(x=805, y=90)
 salidaTitle.insert("0.0", "Salida")
 
-#NOMBRE ARCHIVO DE SALIDA
-nombreArchivo = 'solucionFB.txt'
+#NOMBRE ARCHIVOS DE SALIDA
+salidaFB = 'roFB.txt'
+salidaVoraz = 'roV.txt'
+salidaPD = 'roPD.txt'
 
 def solucionar():
     metodo_seleccionado = opcion.get()
     if metodo_seleccionado == "Fuerza bruta":
         costo_minimo, programacion_optima = finca.fuerza_bruta()
-        finca.escribir_resultados(costo_minimo, programacion_optima, nombreArchivo)
-        with open(nombreArchivo, 'r') as file:
+        finca.escribir_resultados(costo_minimo, programacion_optima, salidaFB)
+        with open(salidaFB, 'r') as file:
     # Read the entire content of the file into a variable
             contenidoArchivo = file.read()
         
         textSalida.delete("1.0","end")
         textSalida.insert("1.0",contenidoArchivo)
-        print("Se creó la solución con el nombre", nombreArchivo)
+        print("Se creó la solución con el nombre", salidaVoraz)
+
+    if metodo_seleccionado == "Voraz":
+        costo_minimo, programacion_optima = finca.riego_voraz()
+        
+        finca.escribir_resultados(costo_minimo, programacion_optima, salidaVoraz)
+        with open(salidaVoraz, 'r') as file:
+            contenidoArchivo = file.read()
+
+        textSalida.delete("1.0", "end")
+        textSalida.insert("1.0", contenidoArchivo)
+        print("Se creó la solución con el nombre", salidaVoraz)
 
 ## lista metodosOpt ####
 metodos = ["Fuerza bruta","Voraz","Prog. dinámica"]
