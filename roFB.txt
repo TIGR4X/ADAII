@@ -1,6 +1,6 @@
-costo 17
+costo 35
+tablon 0
 tablon 2
 tablon 1
-tablon 0
-tablon 3
 tablon 4
+tablon 3
