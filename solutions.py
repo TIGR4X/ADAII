@@ -36,7 +36,7 @@ class Finca:
     def costo_total_riego(self, costosDeRiego):
         return sum(costosDeRiego)
 
-    def fuerza_bruta(self):
+    def roFB(self):
         self.permutacionProgramaciones = list(permutations(range(len(self.finca))))
         todosLosCostos = []
         for programacion in self.permutacionProgramaciones:
@@ -51,7 +51,7 @@ class Finca:
         
         return costoMinimo, programacionOptima
     
-    def riego_voraz(self):
+    def roV(self):
         # Ordenar tablones por la division tr/p mas baja
         iniciosRiegoV = sorted(range(len(self.finca)), key=lambda i: self.finca[i][1] / self.finca[i][2])
         iniciosDeRiego = self.calcular_inicios_de_riego(iniciosRiegoV)
@@ -107,7 +107,7 @@ salidaPD = 'roPD.txt'
 def solucionar():
     metodo_seleccionado = opcion.get()
     if metodo_seleccionado == "Fuerza bruta":
-        costo_minimo, programacion_optima = finca.fuerza_bruta()
+        costo_minimo, programacion_optima = finca.roFB()
         finca.escribir_resultados(costo_minimo, programacion_optima, salidaFB)
         with open(salidaFB, 'r') as file:
             contenidoArchivo = file.read()
@@ -117,7 +117,7 @@ def solucionar():
         print("Se creó la solución con el nombre", salidaFB)
 
     elif metodo_seleccionado == "Voraz":
-        costo_minimo, programacion_optima = finca.riego_voraz()
+        costo_minimo, programacion_optima = finca.roV()
         
         finca.escribir_resultados(costo_minimo, programacion_optima, salidaVoraz)
         with open(salidaVoraz, 'r') as file:
