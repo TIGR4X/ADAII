@@ -1,6 +1,21 @@
-costo 35
-tablon (5, 2, 4)
-tablon (9, 4, 4)
-tablon (10, 2, 2)
-tablon (7, 6, 2)
-tablon (7, 6, 1)
+costo 0
+tablon 16
+tablon 15
+tablon 7
+tablon 8
+tablon 9
+tablon 11
+tablon 14
+tablon 13
+tablon 0
+tablon 2
+tablon 5
+tablon 17
+tablon 18
+tablon 12
+tablon 4
+tablon 1
+tablon 19
+tablon 6
+tablon 10
+tablon 3

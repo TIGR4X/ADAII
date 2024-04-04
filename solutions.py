@@ -68,8 +68,34 @@ class Finca:
     def roPD(self):
         memoTablon={}
         memoprogram={}
-        combinaciones=list(permutations(self.finca))
+        memoConjun={}
     
+        def dt(conjunto,t):
+            
+            tupleConjunto=tuple(conjunto)
+            if (tupleConjunto, t) in memoConjun:
+                return memoConjun[(tupleConjunto,t)]
+            if len(conjunto)==1:
+                return conjunto
+            #Guardar el conjunto con mejor costo en el tiempo t
+            
+            valoresPosiblesConjuntos= []
+            posiblesConjuntos=[]
+            for i in range(len(conjunto)):
+                restoProgram=conjunto[:i]+conjunto[i+1:]
+                tablon_actual=self.finca[conjunto[i]]
+                t_nueva=t+tablon_actual[1]
+                posibleProgram=[conjunto[i]] + dt(restoProgram,t_nueva)
+                valorPosibleProgram=dp([self.finca[posibleProgram[i]] for i in range(len(posibleProgram))],t)
+                posiblesConjuntos.append(posibleProgram)
+                valoresPosiblesConjuntos.append(valorPosibleProgram)
+
+
+            costoMinimo,indicesMinimo=min((valor,indice) for indice, valor in enumerate(valoresPosiblesConjuntos))
+            
+            memoConjun[(tupleConjunto,t)]=posiblesConjuntos[indicesMinimo]
+            
+            return memoConjun[(tupleConjunto,t)]
 
         def dp(programacion,t):
             #condicion de parada
@@ -91,10 +117,9 @@ class Finca:
             memoprogram[(tuple(restoProgram),t_nuevo)]=dp(restoProgram,t_nuevo)
             return costoTablonActual+memoprogram[(tuple(restoProgram),t_nuevo)]
 
-        candidatos=[dp(combinaciones[i],0) for i in range(len(combinaciones))]
-        ##valor_minimo, indice_minimo = min((valor, indice) for indice, valor in enumerate(lista))
-        costo,indicess=min((valor,indice) for indice, valor in enumerate(candidatos))
-        return costo,combinaciones[indicess]
+        listaindices=list(range(len(self.finca)))
+        result=dt(listaindices,0)
+        return 0,result
 
 
     def escribir_resultados(self, costo_minimo, programacion_optima, nombre_archivo):
@@ -104,7 +129,7 @@ class Finca:
                 archivo.write(f"tablon {tablon}\n")
 
 #variables de datos
-archivo_datos = 'BateriaPruebas/Prueba2.txt'
+archivo_datos = 'BateriaPruebas/Prueba22.txt'
 finca = Finca(archivo_datos)
 
 ######## ui ############
