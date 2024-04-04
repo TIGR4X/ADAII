@@ -58,6 +58,44 @@ class Finca:
         costosDeRiego = self.calcular_costo_riego_tablon(iniciosDeRiego)
         totalCost = self.costo_total_riego(costosDeRiego)
         return totalCost, iniciosRiegoV
+    
+    def calcular_costo(self,tablon,tiempo):
+        if (tablon[0]-tablon[1]>=tiempo):
+            return tablon[0]-(tiempo + tablon[1])
+        else:
+            return tablon[2]*((tiempo+tablon[1])-tablon[0])
+
+    def roPD(self):
+        memoTablon={}
+        memoprogram={}
+        combinaciones=list(permutations(self.finca))
+    
+
+        def dp(programacion,t):
+            #condicion de parada
+            if(len(programacion)==0): 
+                return 0
+            #verificar si ya está el costo de la programacion en el tiempo t
+            if ( tuple(programacion) , t ) in memoprogram:
+                return memoprogram[(tuple(programacion),t)]
+            #declarar la informacion del tablon
+            tablon_actual=programacion[0]
+            #calcular el costo del tablon en el tiempo t en el memo tablon
+            if((tablon_actual,t)) not in memoTablon:
+                memoTablon[(tablon_actual,t)]=self.calcular_costo(tablon_actual,t)
+            costoTablonActual=memoTablon[(tablon_actual,t)]
+            #declarar las variables de la siguiente iteracion
+            t_nuevo=t+tablon_actual[1]
+            restoProgram=programacion[1:]
+            #guardar el costo del resto de tablones en el tiempo t en el memo program
+            memoprogram[(tuple(restoProgram),t_nuevo)]=dp(restoProgram,t_nuevo)
+            return costoTablonActual+memoprogram[(tuple(restoProgram),t_nuevo)]
+
+        candidatos=[dp(combinaciones[i],0) for i in range(len(combinaciones))]
+        ##valor_minimo, indice_minimo = min((valor, indice) for indice, valor in enumerate(lista))
+        costo,indicess=min((valor,indice) for indice, valor in enumerate(candidatos))
+        return costo,combinaciones[indicess]
+
 
     def escribir_resultados(self, costo_minimo, programacion_optima, nombre_archivo):
         with open(nombre_archivo, 'w') as archivo:
@@ -126,6 +164,16 @@ def solucionar():
         textSalida.delete("1.0", "end")
         textSalida.insert("1.0", contenidoArchivo)
         print("Se creó la solución con el nombre", salidaVoraz)
+    elif metodo_seleccionado == 'Prog. dinámica':
+        costo_minimo, programacion_optima= finca.roPD()
+        
+        finca.escribir_resultados(costo_minimo, programacion_optima, salidaPD)
+        with open(salidaPD, 'r') as file:
+            contenidoArchivo = file.read()
+
+        textSalida.delete("1.0", "end")
+        textSalida.insert("1.0", contenidoArchivo)
+        print("Se creó la solución con el nombre", salidaPD)
 
 ## lista metodosOpt ####
 metodos = ["Fuerza bruta","Voraz","Prog. dinámica"]

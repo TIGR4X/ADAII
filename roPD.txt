@@ -1,0 +1,6 @@
+costo 35
+tablon (5, 2, 4)
+tablon (9, 4, 4)
+tablon (10, 2, 2)
+tablon (7, 6, 2)
+tablon (7, 6, 1)
