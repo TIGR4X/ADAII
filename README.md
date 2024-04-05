@@ -14,3 +14,10 @@ python solutions.py
 
 ### Cambiar fincas
 Para cambiar la finca a calcular, desde un editor de texto de python o cualquier IDE, editar la linea 135 al numero de prueba que se desee utilizar, siendo un archivo de texto con el formato adecuado
+Ejemplo:
+
+```
+archivo_datos = 'BateriaPruebas/Prueba1.txt'
+archivo_datos = 'BateriaPruebas/Prueba15.txt'
+archivo_datos = 'BateriaPruebas/Prueba20.txt'
+```
