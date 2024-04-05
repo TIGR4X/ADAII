@@ -1,6 +1,11 @@
 # ADAII
 Proyecto Programación Dinámica ADAII
 
+## Integrantes:
+  Victor Daniel Valencia Ñañez (2026608-3743)
+  Alejandro Lasso Medina (2040393-3743)
+  Adolfo León Maya García (2025159 - 3743)
+
 ## Como ejecutar el programa
 Instalar Customtkinter para visualizacion de interfaz
 ```
